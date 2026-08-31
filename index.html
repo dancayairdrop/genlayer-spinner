@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GenLayer Portal Spinner — Live Demo</title>
+<style>
+  :root { --cobalt:#110FFF; --cobalt-lite:#4C6FFF; --void:#070707; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    background: #F5F5F5;
+    color: #070707;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.sub { color: #606060; margin-top: 0; line-height: 1.5; }
+  code { background:#ECECEC; padding:2px 5px; border-radius:4px; font-size:.9em; }
+  section { margin-top: 44px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: #606060; }
+
+  .panel {
+    display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    border-radius: 14px; padding: 32px; margin-top: 12px;
+  }
+  .panel.light { background:#FFFFFF; border:1px solid #CACACA; }
+  .panel.dark  { background:var(--void); }
+
+  .item { display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .item span { font-size:12px; color:#606060; }
+  .panel.dark .item span { color:#CACACA; }
+  .item svg { display:block; }
+
+  pre { background:#0d0d10; color:#e6e6e6; padding:18px; border-radius:10px;
+        overflow:auto; font-size:12.5px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>GenLayer Portal Spinner</h1>
+  <p class="sub">
+    A single-file, dependency-free loading spinner for the GenLayer Portal.
+    Pure SVG + CSS animation (no JS required to run), themeable via
+    <code>currentColor</code>, accessible (<code>role="status"</code>), and
+    <code>prefers-reduced-motion</code> aware. This page is the live deployment —
+    every spinner below is the exact deliverable
+    (<code>genlayer-spinner.svg</code>) running in your browser.
+  </p>
+
+  <section>
+    <h2>On light background — Kinetic Cobalt #110FFF</h2>
+    <div class="panel light" id="light-panel"></div>
+  </section>
+
+  <section>
+    <h2>On dark background — lighter tint #4C6FFF for AA legibility</h2>
+    <div class="panel dark" id="dark-panel"></div>
+  </section>
+
+  <section>
+    <h2>Full-page loading state (typical Portal usage)</h2>
+    <div class="panel dark" style="justify-content:center; min-height:220px;" id="hero-panel"></div>
+  </section>
+
+  <section>
+    <h2>Usage</h2>
+    <pre>&lt;!-- As an image (static loading pages) --&gt;
+&lt;img src="genlayer-spinner.svg" width="32" height="32" alt="Loading"&gt;
+
+&lt;!-- Inlined in a React/JSX component (lets you theme per context) --&gt;
+&lt;span style={{ color: '#110FFF' }} dangerouslySetInnerHTML={{ __html: spinnerSvg }} /&gt;</pre>
+  </section>
+</div>
+
+<script>
+const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="status" aria-label="Loading">
+  <title>Loading…</title>
+  <style>
+    .gl-ring{transform-box:view-box;transform-origin:50% 50%;animation:gl-spin 1.1s linear infinite;fill:currentColor;}
+    .gl-core{fill:currentColor;transform-box:view-box;transform-origin:50% 50%;animation:gl-core 1.8s ease-in-out infinite;}
+    @keyframes gl-spin{to{transform:rotate(360deg);}}
+    @keyframes gl-core{0%,100%{transform:scale(0.82);opacity:.55;}50%{transform:scale(1.12);opacity:1;}}
+    @media (prefers-reduced-motion: reduce){.gl-ring{animation-duration:3s;}.gl-core{animation-duration:3s;}}
+  </style>
+  <g class="gl-ring">
+    <path d="M50.00 11.00 L57.00 18.00 L50.00 25.00 L43.00 18.00 Z" opacity="1"/>
+    <path d="M72.63 21.17 L78.83 27.37 L72.63 33.57 L66.43 27.37 Z" opacity=".82"/>
+    <path d="M82.00 44.60 L87.40 50.00 L82.00 55.40 L76.60 50.00 Z" opacity=".66"/>
+    <path d="M72.63 67.93 L77.33 72.63 L72.63 77.33 L67.93 72.63 Z" opacity=".52"/>
+    <path d="M50.00 77.90 L54.10 82.00 L50.00 86.10 L45.90 82.00 Z" opacity=".40"/>
+    <path d="M27.37 69.03 L30.97 72.63 L27.37 76.23 L23.77 72.63 Z" opacity=".30"/>
+    <path d="M18.00 46.80 L21.20 50.00 L18.00 53.20 L14.80 50.00 Z" opacity=".22"/>
+    <path d="M27.37 24.37 L30.37 27.37 L27.37 30.37 L24.37 27.37 Z" opacity=".16"/>
+  </g>
+  <path class="gl-core" d="M50 40 L60 50 L50 60 L40 50 Z"/>
+</svg>`;
+
+function mount(panelId, color, sizes) {
+  const panel = document.getElementById(panelId);
+  sizes.forEach(px => {
+    const item = document.createElement('div');
+    item.className = 'item';
+    item.innerHTML = SVG;
+    const svg = item.querySelector('svg');
+    svg.style.width = px + 'px';
+    svg.style.height = px + 'px';
+    svg.style.color = color;
+    const label = document.createElement('span');
+    label.textContent = px + 'px';
+    item.appendChild(label);
+    panel.appendChild(item);
+  });
+}
+
+mount('light-panel', '#110FFF', [16, 24, 32, 48, 80]);
+mount('dark-panel',  '#4C6FFF', [16, 24, 32, 48, 80]);
+
+const hero = document.getElementById('hero-panel');
+hero.innerHTML = SVG;
+const heroSvg = hero.querySelector('svg');
+heroSvg.style.width = '56px';
+heroSvg.style.height = '56px';
+heroSvg.style.color = '#4C6FFF';
+const heroLabel = document.createElement('span');
+heroLabel.textContent = 'Loading Portal…';
+heroLabel.style.cssText = 'color:#CACACA;margin-left:16px;font-size:15px;';
+hero.appendChild(heroLabel);
+</script>
+</body>
+</html>

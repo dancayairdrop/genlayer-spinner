@@ -1,34 +1,42 @@
 # GenLayer Portal Spinner
 
-A community-submitted loading spinner for the GenLayer Portal — one self-contained
-SVG file, animated with CSS, no dependencies.
+An original, production-ready loading spinner for the GenLayer Portal — one
+self-contained SVG file, animated with pure CSS, no dependencies and no
+JavaScript required to run.
 
-Open `preview.html` in a browser to see it live on light/dark backgrounds at
-several sizes.
+## Live demo
+
+**https://dancayairdrop.github.io/genlayer-spinner/**
+
+The demo page (`index.html`) renders the exact deliverable
+(`genlayer-spinner.svg`) live at 16–80px on both light and dark surfaces,
+plus a full-page loading state. It is served straight from this repo via
+GitHub Pages — see [Deploying](#deploying) to (re)enable it.
 
 ## Concept
 
-GenLayer's own brand language talks about a **static core** ("a static system
-variable... uncompromised and isolated") surrounded by **autonomous, kinetic
-action**. That's almost literally what a validator network does: independent
-nodes moving around a fixed point of adjudication until they converge.
+GenLayer's brand language describes a **static, uncompromised core** surrounded
+by **autonomous, kinetic action** — which is literally what a validator network
+does: independent nodes moving around a fixed point of adjudication until they
+converge.
 
 The spinner turns that into motion:
 
-- **Three diamond nodes** orbit a shared center, each briefly brightening in
-  turn as it passes — like signals moving between validators toward consensus.
-- **One static core diamond** sits at the center and breathes gently (scale +
-  glow), standing in for the fixed "adjudication" point everything resolves to.
-- No wheel-of-dashes, no generic ring — the diamond motif echoes the angular,
-  "stripped of visual noise" geometry described in GenLayer's brand guide,
-  while staying simple enough to read at 16px.
+- **A ring of diamond nodes** sweeps around a shared center. A comet-style
+  opacity trail (leading node brightest, fading behind) makes the rotation read
+  instantly as a spinner — even at 16px — while the diamond shape keeps the
+  angular, "stripped of visual noise" geometry from GenLayer's brand mark.
+- **A static core diamond** sits at the center and breathes (scale + fade),
+  standing in for the fixed adjudication point everything resolves to.
+- No wheel-of-dashes and no generic ring — the motif is GenLayer-specific.
 
 ## What's in this folder
 
 | File | Purpose |
 |---|---|
-| `genlayer-spinner.svg` | The deliverable. Single file, inline `<style>`, infinite loop. |
-| `preview.html` | Visual QA: the spinner at 16–80px on light and dark backgrounds. Open it directly in a browser. |
+| `genlayer-spinner.svg` | The deliverable. Single file, inline `<style>`, infinite CSS loop. |
+| `index.html` | Live demo / deployment entry: the spinner at 16–80px on light & dark, plus a full-page state and usage snippets. |
+| `preview.html` | Redirects to `index.html` (kept for backwards-compatible links). |
 | `README.md` | This file. |
 
 ## Using it
@@ -39,41 +47,56 @@ The spinner turns that into motion:
 <img src="genlayer-spinner.svg" width="32" height="32" alt="Loading">
 ```
 
-**Inlined** (recommended inside the Portal app — lets you theme the color per
-context):
+When loaded through `<img>` the color is baked to the SVG's own
+`color:` value (**Kinetic Cobalt `#110FFF`**), because an `<img>`-referenced
+SVG renders in an isolated context. To ship a lighter variant for dark
+surfaces, save a copy with `color:#4C6FFF` on the root `<svg>`.
+
+**Inlined** (recommended inside the Portal app — lets you theme per context):
 
 ```jsx
-// paste the contents of genlayer-spinner.svg directly into your component
+// paste the contents of genlayer-spinner.svg into your component
 <svg viewBox="0 0 100 100" style={{ color: '#110FFF', width: 32, height: 32 }}>
-  ...
+  …
 </svg>
 ```
 
-Color comes entirely from `currentColor`, driven by the `color` style on the
-root `<svg>`. Default is **Kinetic Cobalt `#110FFF`** (GenLayer's primary
-brand color) for light surfaces. On near-black surfaces (`Carbon Void
-#070707`), swap in a lighter tint — `#4C6FFF` reads clearly and still sits
-firmly in the brand's cobalt family. `preview.html` demonstrates both.
+When the SVG is inlined into the page, `color` on the root (or any ancestor)
+flows into the shapes via `currentColor`, so a single component can be tinted
+per context — `#110FFF` on light surfaces, `#4C6FFF` on `Carbon Void #070707`.
+`index.html` demonstrates both.
 
 ## Requirements checklist
 
-- ✅ **Original animated spinner**, web-ready format (SVG + CSS animation,
-  no external libraries or fonts).
-- ✅ **Smooth infinite loop** — pure CSS `@keyframes`, GPU-friendly
-  (`transform`/`opacity` only), no JS needed to run.
-- ✅ **Works on light and dark backgrounds** — color is `currentColor`-driven,
-  not baked in; see `preview.html`.
-- ✅ **Readable at small sizes** — tested down to 16px; the shape is three
-  diamonds + one diamond core, nothing finer than that.
-- ✅ **GenLayer identity present** — uses the official Kinetic Cobalt
-  (`#110FFF`), the diamond/angular motif from the brand's geometric mark, and
-  a motion concept (nodes converging on a fixed core) drawn directly from
-  GenLayer's own "autonomous core" positioning.
-- Bonus: respects `prefers-reduced-motion` by slowing (not killing) the loop,
-  and includes `role="status"` / `aria-label="Loading"` for screen readers.
+- ✅ **Original animated spinner**, web-ready (SVG + CSS `@keyframes`, no
+  external libraries, fonts, or JavaScript).
+- ✅ **Smooth infinite loop** — GPU-friendly (`transform`/`opacity` only).
+- ✅ **Works on light and dark backgrounds** — `currentColor`-driven when
+  inlined; see `index.html`.
+- ✅ **Readable at small sizes** — the comet ring reads as a spinner down to
+  16px (verified in the demo).
+- ✅ **Deployed and verifiable** — live on GitHub Pages (link above), served
+  from this repo's source with no build step.
+- ✅ **GenLayer identity** — official Kinetic Cobalt (`#110FFF`), the
+  diamond/angular motif from the brand mark, and a motion concept (nodes
+  converging on a fixed core) drawn from GenLayer's "autonomous core"
+  positioning.
+- ✅ **Accessible & considerate** — `role="status"` / `aria-label="Loading"`
+  for screen readers, and `prefers-reduced-motion` slows the loop instead of
+  killing it.
+
+## Deploying
+
+The demo is a static site (no build step). To publish it on GitHub Pages:
+
+1. Go to the repo **Settings → Pages**.
+2. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+3. Select branch **`main`** and folder **`/ (root)`**, then **Save**.
+4. Wait ~1 minute; the site goes live at
+   `https://dancayairdrop.github.io/genlayer-spinner/` (GitHub Pages serves
+   `index.html` at the root).
 
 ## License
 
-Submitted for GenLayer's use in the Portal — free to use, modify, and ship
-under whatever license the GenLayer repo uses (MIT/CC0 recommended if none is
-specified).
+Submitted for GenLayer's use in the Portal — free to use, modify, and ship.
+Released under **MIT** (or CC0 if GenLayer prefers a public-domain dedication).

@@ -2,69 +2,56 @@
      role="status" aria-label="Loading" style="color:#110FFF">
   <title>Loading…</title>
 
+  <!--
+    GenLayer Portal spinner — single self-contained file, pure CSS animation.
+    Concept: autonomous validator nodes (diamonds) sweep around a fixed
+    adjudication core until they converge. The comet-style opacity trail makes
+    the rotation unmistakably a "spinner" even at 16px, while the diamond motif
+    and Kinetic Cobalt keep it on GenLayer's brand geometry.
+    Color is currentColor-driven — set `color:` on this <svg> to theme it.
+  -->
   <style>
-    :root { --gl-spinner-color: currentColor; }
-
-    .gl-wheel {
+    .gl-ring {
       transform-box: view-box;
       transform-origin: 50% 50%;
-      animation: gl-spin 1.8s linear infinite;
+      animation: gl-spin 1.1s linear infinite;
+      fill: currentColor;
     }
 
     .gl-core {
-      fill: var(--gl-spinner-color);
+      fill: currentColor;
       transform-box: view-box;
       transform-origin: 50% 50%;
-      filter: drop-shadow(0 0 3px currentColor);
-      animation: gl-pulse-core 2.4s ease-in-out infinite;
+      animation: gl-core 1.8s ease-in-out infinite;
     }
 
-    .gl-node {
-      fill: var(--gl-spinner-color);
-      filter: drop-shadow(0 0 2px currentColor);
-      animation: gl-pulse-node 1.8s ease-in-out infinite;
+    @keyframes gl-spin { to { transform: rotate(360deg); } }
+
+    @keyframes gl-core {
+      0%, 100% { transform: scale(0.82); opacity: .55; }
+      50%      { transform: scale(1.12); opacity: 1;   }
     }
 
-    .gl-node-a { animation-delay: 0s;    }
-    .gl-node-b { animation-delay: -0.6s; }
-    .gl-node-c { animation-delay: -1.2s; }
-
-    @keyframes gl-spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes gl-pulse-core {
-      0%, 100% { transform: scale(1);     opacity: .8;  }
-      50%      { transform: scale(1.14);  opacity: 1;   }
-    }
-
-    @keyframes gl-pulse-node {
-      0%, 100% { opacity: .3; }
-      50%      { opacity: 1;  }
-    }
-
-    /* keep the loop legible for motion-sensitive users without killing the
-       "still loading" signal a spinner exists to give */
+    /* Motion-sensitive users: slow the loop right down instead of freezing it,
+       so the "still working" signal a spinner exists to give is preserved. */
     @media (prefers-reduced-motion: reduce) {
-      .gl-wheel  { animation-duration: 3.2s; }
-      .gl-core,
-      .gl-node   { animation-duration: 3.2s; }
+      .gl-ring { animation-duration: 3s; }
+      .gl-core { animation-duration: 3s; }
     }
   </style>
 
-  <!-- three orbiting validator nodes reaching consensus around a fixed core -->
-  <g class="gl-wheel">
-    <g transform="rotate(0 50 50)">
-      <path class="gl-node gl-node-a" d="M50 19 L56 26 L50 33 L44 26 Z"/>
-    </g>
-    <g transform="rotate(120 50 50)">
-      <path class="gl-node gl-node-b" d="M50 19 L56 26 L50 33 L44 26 Z"/>
-    </g>
-    <g transform="rotate(240 50 50)">
-      <path class="gl-node gl-node-c" d="M50 19 L56 26 L50 33 L44 26 Z"/>
-    </g>
+  <!-- rotating comet ring of validator nodes -->
+  <g class="gl-ring">
+    <path d="M50.00 11.00 L57.00 18.00 L50.00 25.00 L43.00 18.00 Z" opacity="1"/>
+    <path d="M72.63 21.17 L78.83 27.37 L72.63 33.57 L66.43 27.37 Z" opacity=".82"/>
+    <path d="M82.00 44.60 L87.40 50.00 L82.00 55.40 L76.60 50.00 Z" opacity=".66"/>
+    <path d="M72.63 67.93 L77.33 72.63 L72.63 77.33 L67.93 72.63 Z" opacity=".52"/>
+    <path d="M50.00 77.90 L54.10 82.00 L50.00 86.10 L45.90 82.00 Z" opacity=".40"/>
+    <path d="M27.37 69.03 L30.97 72.63 L27.37 76.23 L23.77 72.63 Z" opacity=".30"/>
+    <path d="M18.00 46.80 L21.20 50.00 L18.00 53.20 L14.80 50.00 Z" opacity=".22"/>
+    <path d="M27.37 24.37 L30.37 27.37 L27.37 30.37 L24.37 27.37 Z" opacity=".16"/>
   </g>
 
-  <!-- static, breathing core: the "adjudication" anchor everything orbits -->
-  <path class="gl-core" d="M50 41 L59 50 L50 59 L41 50 Z"/>
+  <!-- fixed adjudication core: the anchor the network converges on -->
+  <path class="gl-core" d="M50 40 L60 50 L50 60 L40 50 Z"/>
 </svg>
